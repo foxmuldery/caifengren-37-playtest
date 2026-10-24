@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>采风人 · 37号仓库</title>
+<meta name="description" content="采风人 · 37号仓库：一款档案怪核风格的卡牌肉鸽。">
+<meta name="theme-color" content="#0d0f0e">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="puzzle.css">
+<link rel="stylesheet" href="zz-map.css">
+<link rel="stylesheet" href="zz-layout.css"></head>
+<body>
+<canvas id="noise" width="512" height="512" aria-hidden="true"></canvas>
+<div id="scanlines"></div>
+<div id="app" role="main"></div>
+<div id="fx"></div>
+<div id="tooltip" class="hidden"></div>
+<div id="small-screen" role="status">
+  <div class="ss-inner">
+    <div class="ss-tag">SCREEN TOO SMALL</div>
+    <h1>窗口太小，暂时无法采风</h1>
+    <p>窗口需要 <b>≥ 340px 宽、≥ 360px 高</b>。桌面推荐 <b>1280 × 800</b> 以上。</p>
+    <p>手机请用<b>竖屏</b>（横屏高度不够）；桌面端请拉宽/拉高浏览器窗口。</p>
+    <p class="ss-hint">当前游戏的存档不会因此丢失。</p>
+  </div>
+</div>
+
+<script src="build-info.js"></script>
+<!-- 战斗特效包按需加载（默认开启；软件渲染 / ?fx=0 / 设置关闭时不加载）：见 js/ui.js ensureBattleFx() -->
+
+<script src="js/gate.js"></script>
+</body>
+</html>

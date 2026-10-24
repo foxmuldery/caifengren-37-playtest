@@ -1,0 +1,415 @@
+/* ==========================================================================
+   zz-layout.css —— 自适应总表（2026-10-23 fix/responsive-art）
+   只保留三档：手机 ≤599px（含高度 ≤520px 的横屏手机）· 平板 600–1199px · 桌面 ≥1200px
+   战斗页在所有档位都是五行网格：顶栏 / 战场 / 玩家条 / 手牌 / 操作条。
+   原来散落在 style.css 的 899 / 520 / 780 / 900–1180 / v1.4 战斗规则已删并到这里。
+   ========================================================================== */
+:root { --tb-h: 58px; }
+
+/* ---------------------------- 通用：战斗网格 ---------------------------- */
+#app .battlewrap {
+  --b-hand: clamp(200px, 30vh, 300px);
+  height: 100vh; height: 100dvh; min-height: 0; padding: 0;
+  display: grid; grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto var(--b-hand) auto;
+  overflow: hidden;
+}
+#app .battlewrap > * { grid-column: 1; min-width: 0; }
+#app .battlewrap > .battle-bg, #app .battlewrap > .battle-scrim { grid-row: 1 / -1; grid-column: 1; }
+#app .battlewrap > .topbar { grid-row: 1; min-width: 0; position: relative; }
+#app .battlewrap > .b-stage {
+  grid-row: 2; position: relative; inset: auto; min-height: 0; min-width: 0;
+  padding: 34px 24px 6px; overflow: hidden;
+}
+#app .battlewrap > .b-stage::before { inset: 30px 10% 0; }
+#app .battlewrap > .b-stage::after { bottom: 20px; }
+#app .battlewrap > .b-main {
+  grid-row: 3; position: relative; inset: auto; z-index: 5;
+  display: flex; align-items: flex-end; justify-content: space-between;
+  padding: 0 24px 4px; margin: 0; pointer-events: none;
+}
+#app .battlewrap > .b-hand-row {
+  grid-row: 4; position: relative; inset: auto; height: auto; min-width: 0; z-index: 6;
+}
+#app .battlewrap > .b-controls {
+  grid-row: 5; position: relative; inset: auto; height: 0; z-index: 8;
+}
+#app .battlewrap .stage-floor { bottom: 0; }
+#app .battlewrap .hand-view { height: 100%; }
+
+/* ------------------------------- 桌面 ≥1200 ------------------------------- */
+@media (min-width: 1200px) and (min-height: 521px) {
+  /* 玩家条压在战场左下角（保留原来的构图），手牌下面留出操作条 */
+  #app .battlewrap { grid-template-rows: auto minmax(0, 1fr) 0 var(--b-hand) 84px; }
+  #app .battlewrap > .b-main { grid-row: 2; align-self: end; padding-bottom: 10px; }
+  #app .battlewrap > .b-controls { grid-row: 5; height: 84px; }
+  #app .battlewrap .b-controls .energy { bottom: 10px; }
+  #app .battlewrap .b-controls .endturn { bottom: 16px; }
+  .battlewrap .hand .card { width: clamp(132px, 9.4vw, 176px); height: clamp(204px, 14.5vw, 270px); }
+  .battlewrap .hand .card .c-name { font-size: clamp(13px, .9vw, 16px); }
+  .battlewrap .hand .card .c-text { font-size: clamp(11px, .78vw, 14px); line-height: 1.45; }
+  .battlewrap .hand-view { margin: 0 clamp(160px, 14vw, 260px); }
+  .b-turn, .b-scene, .battlelog .logline, .b-hint { font-size: clamp(11px, .75vw, 14px); }
+  .e-name { font-size: clamp(14px, 1vw, 18px); }
+  .e-hp b, .intent { font-size: clamp(11px, .75vw, 14px); }
+  .battlewrap .pp { min-width: clamp(320px, 22vw, 440px); }
+
+  /* 面板类页面：整体按视口放大，字号随之缩放（保留 v2b 档案的小字密排比例） */
+  .topbar .ghost, .topbar .meter b, .huditem .lbl { font-size: 12px; }
+}
+@media (min-width: 1400px) and (min-height: 800px) {
+  .panel, .dossier, .pz-panel, .pb-panel, .archive-inner, .overlay-inner { zoom: 1.18; }
+  .mappage .side { zoom: 1.14; }
+  .panel.wide { width: min(1240px, 100%); }
+}
+@media (min-width: 1800px) and (min-height: 900px) {
+  .panel, .dossier, .pz-panel, .pb-panel, .archive-inner, .overlay-inner { zoom: 1.36; }
+  .mappage .side { zoom: 1.3; }
+  .topbar { height: 66px; }
+  .topbar .ghost { font-size: 13px; padding: 7px 12px; }
+}
+/* 放大后的面板页内容可能比视口高：外层负责滚动 */
+@media (min-width: 1200px) { .panel-page { place-items: safe center; } }
+
+/* ------------------------------ 平板 600–1199 ------------------------------ */
+@media (min-width: 600px) and (max-width: 1199px) and (min-height: 521px) {
+  #app .battlewrap { --b-hand: clamp(196px, 26vh, 260px); grid-template-rows: auto minmax(0, 1fr) auto var(--b-hand) 64px; }
+  #app .battlewrap > .b-stage { padding: 30px 14px 4px; }
+  #app .battlewrap > .b-main { padding: 0 14px 4px; align-items: center; }
+  #app .battlewrap > .b-main .pp { min-width: 0; width: min(440px, 100%); max-width: 440px; }
+  #app .battlewrap > .b-main .battlelog { width: min(320px, 40%); max-height: 64px; }
+  #app .battlewrap > .b-controls { height: 64px; }
+  #app .battlewrap .b-controls .energy { left: 14px; bottom: 6px; width: 54px; height: 54px; }
+  #app .battlewrap .b-controls .endturn { right: 14px; bottom: 10px; }
+  .battlewrap .hand-view { margin: 0 120px; padding-top: 26px; }
+  .battlewrap .hand .card { width: clamp(118px, 13vw, 140px); height: clamp(176px, 19.5vw, 210px); }
+  .battlewrap .draw-pile, .battlewrap .discard-pile { transform: scale(.72); transform-origin: bottom center; }
+  .b-stage .enemies { gap: 14px; }
+  .b-stage .enemy { width: min(220px, 28vw); }
+  .b-stage .enemy .e-figure { height: clamp(130px, 26vh, 280px); }
+  .b-stage .enemy.is-elite .e-figure, .b-stage .enemy.is-boss .e-figure { height: clamp(150px, 30vh, 320px); }
+  .panel.wide { width: min(1000px, 100%); }
+}
+
+/* ------------------------- 手机 ≤599 / 横屏矮屏 ≤520 ------------------------- */
+@media (max-width: 599px), (max-height: 520px) {
+  html, body { height: 100%; overflow: hidden; }
+  :root { --tb-h: 46px; }
+  #app .battlewrap { --b-hand: 186px; grid-template-rows: auto minmax(0, 1fr) auto var(--b-hand) 52px; }
+  #app .battlewrap > .b-stage {
+    padding: 22px 6px 0; display: flex; flex-direction: column; justify-content: flex-start;
+  }
+  #app .battlewrap > .b-stage::after { display: none; }            /* 竖排「FIELD RECORD」压在敌人身上 */
+  .b-turn { position: absolute; top: 3px; left: 8px; right: 8px; margin: 0; font-size: 11px; }
+  .b-scene, .stage-ghost, .b-hint:not(.tutorial), .stage-floor, .scene-tape { display: none; }
+  .b-hint.tutorial { position: absolute; left: 8px; top: 20px; transform: none; max-width: calc(100% - 16px); font-size: 11px; padding: 4px 8px; margin: 0; z-index: 7; }
+  #app .battlewrap > .b-main { padding: 0 6px 2px; flex-direction: column; align-items: stretch; gap: 0; pointer-events: auto; }
+  #app .battlewrap > .b-main .pp { width: 100%; max-width: none; min-width: 0; min-height: 0; flex-wrap: nowrap; gap: 8px; padding: 4px 8px; }
+  #app .battlewrap > .b-main .battlelog { position: static; width: auto; height: 18px; max-height: 18px; overflow: hidden; margin: 2px 0 0; padding: 0 2px; text-align: left; }
+  #app .battlewrap > .b-main .battlelog .logline { display: none; font-size: 11px; line-height: 18px; }
+  #app .battlewrap > .b-main .battlelog .logline:last-child { display: block; }
+  #app .battlewrap > .b-hand-row { background: none; overflow: hidden; }
+  #app .battlewrap > .b-controls { height: 52px; background: rgba(10,12,11,.94); border-top: 1px solid var(--line); }
+
+  /* 敌人：吃掉剩余高度，血条和名字永远在框内 */
+  .battlewrap .enemies { flex: 1 1 auto; min-height: 0; min-width: 0; width: 100%; flex-wrap: nowrap; align-items: stretch; gap: 4px; }
+  .battlewrap .enemy, .battlewrap .enemies .enemy:only-child, .battlewrap .enemy.is-elite, .battlewrap .enemy.is-boss {
+    width: auto; flex: 1 1 0; min-width: 0; max-width: 220px; max-height: 100%; min-height: 0;
+    display: flex; flex-direction: column; align-items: stretch; justify-content: flex-end; padding: 0 2px 3px;
+  }
+  .battlewrap .e-figure, .battlewrap .enemies .enemy:only-child .e-figure,
+  .battlewrap .enemy.is-elite .e-figure, .battlewrap .enemy.is-boss .e-figure { flex: 1 1 auto; height: auto; min-height: 36px; max-height: none; }
+  .battlewrap .e-intent-row { flex: 0 0 auto; height: 26px; }
+  .battlewrap .e-buffs { flex: 0 0 auto; max-height: 22px; overflow: hidden; margin-top: 3px; min-height: 0; }
+  .battlewrap .e-vital, .battlewrap .boss-tag { flex: 0 0 auto; }
+  .battlewrap .e-name { flex: 0 0 auto; line-height: 1.2; font-size: 13px; }
+  .battlewrap .e-name .mono { display: none; }
+  .battlewrap .e-hp { display: block; flex: 0 0 auto; height: 13px; margin-top: 3px; }
+  .battlewrap .e-hp b { font-size: 11px; }
+  .battlewrap .e-figure.is-entity { overflow: hidden; }
+  .battlewrap .e-figure.is-entity .e-ent { width: auto; height: 100%; max-height: 100%; max-width: 100%; aspect-ratio: var(--ear); align-self: center; }
+
+  /* 手牌：104×150，名字和两行说明完整可读；多了横滑 */
+  .battlewrap .hand-view { margin: 0 46px; padding-top: 22px; min-width: 0; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x proximity;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 10px, #000 calc(100% - 10px), transparent 100%);
+            mask-image: linear-gradient(90deg, transparent 0, #000 10px, #000 calc(100% - 10px), transparent 100%); }
+  .battlewrap .hand { min-width: 0; padding: 0; }
+  .battlewrap .hand .card { width: 106px; height: 156px; padding: 4px 5px 5px; flex: 0 0 auto; scroll-snap-align: center; }
+  .battlewrap .hand .card:first-child { margin-left: 0; }
+  .battlewrap .hand .card .c-art { height: 50px; aspect-ratio: auto; }
+  .battlewrap .hand .card .c-name { font-size: 12px; }
+  .battlewrap .hand .card:first-child { margin-left: 0 !important; }
+  .battlewrap .hand .card .c-text { font-size: 10.5px; line-height: 1.3; -webkit-line-clamp: 4; line-clamp: 4; }
+  .battlewrap .hand .card .c-kind, .battlewrap .hand .card .c-ref, .battlewrap .hand .card .c-plate-code, .battlewrap .hand .card .c-code { display: none; }
+  .battlewrap .hand .card:hover, .battlewrap .hand .card:focus-visible, .battlewrap .hand .card.aim-selected { transform: translateY(-10px) scale(1.04); }
+  .battlewrap .draw-pile, .battlewrap .discard-pile { transform: scale(.48); transform-origin: bottom center; }
+  .battlewrap .draw-pile { left: -30px; }
+  .battlewrap .discard-pile { right: -30px; }
+
+  .battlewrap .pp-portrait { width: 44px; height: 44px; flex: 0 0 44px; }
+  .battlewrap .pp-meta { min-width: 0; flex: 1 1 auto; }
+  .battlewrap .pp-meta b { font-size: 14px; }
+  .battlewrap .pp-meta i { display: none; }
+  .battlewrap .pp-hp { height: 14px; max-width: none; width: 100%; }
+  .battlewrap .pp-vitals { flex: 0 0 auto; gap: 6px; }
+  .battlewrap .pp-block { min-width: 46px; padding: 3px 5px; }
+  .battlewrap .pp-block b { font-size: 17px; }
+  .battlewrap .pp-chips { flex-wrap: nowrap; overflow: hidden; max-height: 22px; gap: 4px; }
+  .battlewrap .pp-charge i { display: none; }
+
+  .battlewrap .b-controls .energy { left: 8px; bottom: 6px; width: 40px; height: 40px; }
+  .battlewrap .b-controls .energy b { font-size: 16px; }
+  .battlewrap .b-controls .energy small { display: none; }
+  .battlewrap .b-controls .endturn { right: 8px; bottom: 7px; padding: 9px 14px; font-size: 13px; }
+  .battlewrap .b-controls .endturn kbd { display: none; }
+  .battlewrap .b-controls .undo { left: 56px; bottom: 9px; }
+  .battlewrap .incoming { left: 56px; right: 118px; bottom: 15px; transform: none; font-size: 11px; padding: 3px 6px; text-align: center; }
+
+  /* 回合横幅、环境音提示：放进战场中部，不盖顶栏和手牌 */
+  .turn-banner { top: 32%; font-size: 12px; }
+  .audio-toast { top: 46px !important; bottom: auto !important; font-size: 10px; letter-spacing: .04em; padding: 4px 10px; white-space: nowrap; max-width: 94vw; }
+
+  /* ---------- 顶栏：一行 + 折叠菜单 ---------- */
+  .topbar { flex-wrap: nowrap; height: var(--tb-h); padding: 0 8px; gap: 8px; position: sticky; top: 0; z-index: 40; }
+  .brand { min-width: 0; gap: 6px; }
+  .brand > div { display: none; }
+  .brand .mark { width: 24px; height: 24px; font-size: 11px; }
+  .hud { order: 0; flex: 1 1 auto; min-width: 0; gap: 8px; overflow: hidden; }
+  .huditem .lbl { display: none; }
+  .meter { width: clamp(64px, 20vw, 96px); height: 16px; }
+  .meter b { font-size: 11px; }
+  .gold { font-size: 13px; white-space: nowrap; }
+  .relicbar { display: none; }
+  .tb-actions { order: 1; flex: 0 0 auto; gap: 4px; flex-wrap: nowrap; overflow: visible; position: static; }
+  .tb-actions .who, .tb-actions .asc-badge, .tb-actions .daily-badge { display: none; }
+  .tb-actions > .ghost:not([data-act="deck"]):not(.tb-menu) { display: none; }
+  .tb-actions .tb-menu { display: inline-flex; }
+  .ghost { padding: 6px 9px; font-size: 12px; min-height: 32px; }
+  .topbar.menu-open .tb-actions {
+    position: absolute; top: var(--tb-h); right: 0; left: 0; z-index: 60; flex-wrap: wrap;
+    padding: 8px; gap: 6px; background: rgba(12,14,13,.97); border-bottom: 1px solid var(--line2);
+    box-shadow: 0 10px 24px rgba(0,0,0,.6);
+  }
+  .topbar.menu-open .tb-actions > .ghost { display: inline-flex; flex: 1 1 28%; justify-content: center; min-height: 40px; font-size: 13px; }
+  .topbar.menu-open .relicbar { display: flex; position: absolute; top: calc(var(--tb-h) + 104px); left: 0; right: 0; z-index: 60; padding: 6px 8px; background: rgba(12,14,13,.97); overflow-x: auto; }
+
+  /* ---------- 面板页 ---------- */
+  .panel-page, .event-page { height: auto; min-height: calc(100dvh - var(--tb-h)); padding: 10px 8px 24px; overflow: visible; }
+  #app:has(.panel-page), #app:has(.event-page), #app:has(.mappage) { height: 100dvh; overflow-y: auto; }
+  .panel, .panel.wide { width: 100%; max-width: 100%; padding: 16px 12px; margin: 0; box-sizing: border-box; }
+  .panel-head p, .dossier-text p, .rest-opt p, .shop-item, .bc-row { font-size: 12.5px; }
+
+  /* 休整：图在上、字在下，两列卡片，文字不再叠行 */
+  .rest-grid { display: grid !important; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .rest-opt { display: flex; flex-direction: column !important; align-items: stretch !important; text-align: left; padding: 0 0 10px !important; gap: 4px !important; min-height: 0; height: auto; }
+  .rest-opt .ro-img { width: 100% !important; aspect-ratio: 16 / 9 !important; height: auto !important; align-self: stretch !important; margin: 0 0 4px; }
+  .rest-opt b { padding: 0 10px; font-size: 16px; white-space: normal; }
+  .rest-opt p { padding: 0 10px; font-size: 12px; line-height: 1.55; flex: none; }
+  .rest-opt:last-child:nth-child(odd) { grid-column: 1 / -1; }
+
+  /* 奖励三选一：三张卡等分一行，不再缩成 100px */
+  .reward-cards { gap: 6px; overflow: visible; flex-wrap: nowrap; }
+  .reward-cards .reward-pick { flex: 1 1 0; min-width: 0; }
+  .reward-cards .reward-pick .card { width: 100%; height: auto; aspect-ratio: 2 / 3; }
+  .reward-cards .card .c-art { height: auto; aspect-ratio: 4 / 3; }
+  .reward-cards .card .c-text { font-size: 10.5px; -webkit-line-clamp: 4; line-clamp: 4; }
+  .asc-tip { max-width: calc(100vw - 32px); white-space: normal; left: auto !important; right: 0; }
+}
+@media (max-height: 520px) {
+  #app .battlewrap { --b-hand: 140px; grid-template-rows: auto minmax(0, 1fr) auto var(--b-hand) 46px; }
+  .battlewrap .hand .card { width: 94px; height: 118px; }
+  .battlewrap .hand .card .c-art { height: 36px; }
+  .battlewrap .hand .card .c-text { -webkit-line-clamp: 2; line-clamp: 2; }
+  #app .battlewrap > .b-main .pp { padding: 3px 6px; }
+  .battlewrap .pp-portrait { width: 34px; height: 34px; flex-basis: 34px; }
+  #app .battlewrap > .b-controls { height: 46px; }
+  .rest-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .rest-opt:last-child:nth-child(odd) { grid-column: auto; }
+}
+/* 折叠菜单按钮：只有手机档显示 */
+@media (min-width:600px) and (min-height:521px){ .tb-actions .tb-menu { display: none; } }
+
+/* ---------------------- 现有素材替换汉字底纹（2026-10-23） ---------------------- */
+/* 谜题页 / 战前调查：用敌人（或事件）现场照片做页头，冷色压暗 */
+.pz-photo { position: relative; margin: 0 0 10px; overflow: hidden; border: 1px solid rgba(160,180,175,.22); background: #0b0d0d; }
+.pz-photo img { display: block; width: 100%; height: 120px; object-fit: contain; object-position: center 30%; filter: saturate(.7) contrast(1.05) brightness(.85); }
+.pz-photo figcaption { position: absolute; left: 8px; bottom: 6px; font-size: 10px; letter-spacing: .14em; color: #9fb0ab; text-shadow: 0 0 4px #000; }
+.pz-photo.pz-hero img { height: clamp(140px, 24vh, 260px); }
+.pz-card.has-photo { padding-top: 10px; }
+/* 档案库卡牌页签：卡图缩略图（卡面横幅比例），不再显示大汉字 */
+.arc-thumb.card { width: 64px; height: 48px; object-position: center; filter: saturate(.85); }
+.arc-item:has(.arc-thumb.card) .arc-glyph { display: none; }
+/* 技能：敌人照片头像 */
+.sk-glyph.sk-photo { padding: 0; overflow: hidden; background: #0b0d0d; }
+.sk-glyph.sk-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 25%; display: block; filter: saturate(.8); }
+.sk-glyph.sk-photo.locked img { filter: brightness(0) grayscale(1); opacity: .35; }
+.sk-glyph.sk-photo { flex: 0 0 40px; height: 40px; }
+
+/* residual overflow fixes */
+@media (max-width:599px){
+    #app .b-hand-row .hand-view{padding-left:6px;padding-right:6px;box-sizing:border-box}
+  #app .b-hand-row .card:last-child{margin-right:0}
+}
+#app .e-name{overflow-wrap:anywhere;min-width:0}
+@media (min-width:600px) and (max-width:1199px){#app .e-name{max-width:none!important;font-size:.92em}}
+span.asc-tip{position:absolute;left:50%!important;right:auto!important;transform:translateX(-50%)!important;max-width:min(320px,90vw)!important;white-space:normal!important;box-sizing:border-box}
+@media (max-width:599px){#app .b-hand-row{overflow:hidden}}
+#app .e-name{white-space:normal!important;text-overflow:clip!important}
+#app .battlewrap .e-hp{width:100%;min-width:60px;box-sizing:border-box;align-self:stretch}
+
+/* 装饰桌布不再溢出舞台 */
+#app .b-stage { overflow: hidden; }
+#app .stage-mat { left: 0; right: 0; }
+
+/* 桌面/平板：战场背景一直铺到手牌底下，去掉舞台与手牌之间的黑缝 */
+@media (min-width: 600px) and (min-height: 521px) {
+  #app .battlewrap > .b-stage { grid-row: 2 / 5; padding-bottom: calc(var(--b-hand) + 6px); }
+  #app .battlewrap > .b-hand-row { background: none !important; box-shadow: none !important; }
+  #app .battlewrap > .b-hand-row::before { display: none; }
+}
+@media (min-width: 1200px) and (min-height: 521px) {
+  #app .battlewrap > .b-main { grid-row: 2; }
+}
+
+/* 平板休整页：图上文下的三列卡片，避免文字被挤成竖排 */
+@media (min-width: 600px) and (max-width: 1199px) and (min-height: 521px) {
+  .rest-grid { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .rest-opt { display: flex; flex-direction: column !important; align-items: stretch !important; text-align: left; padding: 0 0 12px !important; gap: 4px !important; min-height: 0; height: auto; width: auto !important; }
+  .rest-opt .ro-img { width: 100% !important; aspect-ratio: 16 / 9 !important; height: auto !important; align-self: stretch !important; margin: 0 0 4px; }
+  .rest-opt b { padding: 0 12px; font-size: 17px; white-space: normal; }
+  .rest-opt p { padding: 0 12px; font-size: 13px; line-height: 1.6; flex: none; }
+}
+
+/* 平板战斗：敌人立绘吃满战场高度（原来只有 70px 高、名字飘在下面） */
+@media (min-width: 600px) and (max-width: 1199px) and (min-height: 521px) {
+  #app .battlewrap > .b-stage { display: flex; flex-direction: column; justify-content: flex-start; padding: 40px 16px calc(var(--b-hand) + 118px); }
+  .battlewrap .enemies { flex: 1 1 auto; min-height: 0; width: 100%; flex-wrap: nowrap; align-items: stretch; justify-content: center; gap: 18px; }
+  .battlewrap .enemy, .battlewrap .enemies .enemy:only-child, .battlewrap .enemy.is-elite, .battlewrap .enemy.is-boss,
+  .enemies.entities .enemy, .enemies.entities .enemy:only-child {
+    width: auto; flex: 0 1 260px; min-width: 0; max-height: 100%; min-height: 0;
+    display: flex; flex-direction: column; align-items: stretch; justify-content: flex-end; padding: 0 4px 4px;
+  }
+  .battlewrap .e-figure, .battlewrap .enemies .enemy:only-child .e-figure,
+  .battlewrap .enemy.is-elite .e-figure, .battlewrap .enemy.is-boss .e-figure,
+  .battlewrap .e-figure.is-entity { flex: 1 1 auto; height: auto !important; min-height: 60px; max-height: none; overflow: hidden; }
+  .battlewrap .e-intent-row, .battlewrap .e-name, .battlewrap .e-vital, .battlewrap .e-buffs { flex: 0 0 auto; }
+  .battlewrap .e-hp { display: block; height: 14px; margin-top: 3px; }
+  .battlewrap .e-figure.is-entity .e-ent { width: auto; height: 100%; max-height: 100%; max-width: 100%; aspect-ratio: var(--ear); align-self: center; }
+}
+
+/* 平板手牌：按张数叠压，整手留在框内，不出横向滚动条 */
+@media (min-width: 600px) and (max-width: 1199px) and (min-height: 521px) {
+  #app .battlewrap .hand-view { overflow: visible; }
+  .battlewrap .hand:has(> .card:nth-child(2):last-child) .card { margin-left: min(6px, calc((100vw - 240px - 2 * clamp(118px, 13vw, 140px)) / 1)); }
+  .battlewrap .hand:has(> .card:nth-child(3):last-child) .card { margin-left: min(6px, calc((100vw - 240px - 3 * clamp(118px, 13vw, 140px)) / 2)); }
+  .battlewrap .hand:has(> .card:nth-child(4):last-child) .card { margin-left: min(6px, calc((100vw - 240px - 4 * clamp(118px, 13vw, 140px)) / 3)); }
+  .battlewrap .hand:has(> .card:nth-child(5):last-child) .card { margin-left: min(6px, calc((100vw - 240px - 5 * clamp(118px, 13vw, 140px)) / 4)); }
+  .battlewrap .hand:has(> .card:nth-child(6):last-child) .card { margin-left: min(6px, calc((100vw - 240px - 6 * clamp(118px, 13vw, 140px)) / 5)); }
+  .battlewrap .hand:has(> .card:nth-child(7):last-child) .card { margin-left: min(6px, calc((100vw - 240px - 7 * clamp(118px, 13vw, 140px)) / 6)); }
+  .battlewrap .hand:has(> .card:nth-child(8):last-child) .card { margin-left: min(6px, calc((100vw - 240px - 8 * clamp(118px, 13vw, 140px)) / 7)); }
+  .battlewrap .hand:has(> .card:nth-child(9):last-child) .card { margin-left: min(6px, calc((100vw - 240px - 9 * clamp(118px, 13vw, 140px)) / 8)); }
+  .battlewrap .hand:has(> .card:nth-child(10):last-child) .card { margin-left: min(6px, calc((100vw - 240px - 10 * clamp(118px, 13vw, 140px)) / 9)); }
+  .battlewrap .hand:has(> .card:nth-child(11):last-child) .card { margin-left: min(6px, calc((100vw - 240px - 11 * clamp(118px, 13vw, 140px)) / 10)); }
+  .battlewrap .hand:has(> .card:nth-child(12):last-child) .card { margin-left: min(6px, calc((100vw - 240px - 12 * clamp(118px, 13vw, 140px)) / 11)); }
+  .battlewrap .hand .card:first-child { margin-left: 0 !important; }
+  #app .battlewrap > .b-stage { padding-bottom: calc(var(--b-hand) + 92px); }
+}
+
+/* 手机手牌：牌堆挪到底部操作条（能量和结束回合之间），手牌区左右只留 6px；
+   卡最多叠压 42px（露出 64px，中心始终可点），5 张以内整手在框内，更多时横滑 */
+@media (max-width: 599px), (max-height: 520px) {
+  #app .battlewrap > .b-hand-row { overflow: visible; z-index: 9; }
+  #app .battlewrap .hand-view { margin: 0 6px !important; padding-left: 0 !important; padding-right: 0 !important; overflow-x: auto; overflow-y: hidden; -webkit-mask-image: none; mask-image: none; scrollbar-width: none; }
+  #app .battlewrap .pile-prop { top: auto !important; bottom: -50px !important; right: auto !important; z-index: 9; }
+  #app .battlewrap .pile-prop.draw-pile { left: 105px !important; }      /* 视觉位置 132–182：撤回按钮（56–126）右边 */
+  #app .battlewrap .pile-prop.discard-pile { left: 159px !important; }   /* 186–236，结束回合从 ≥255 开始 */
+  .battlewrap .hand .card .c-text { -webkit-line-clamp: 3; line-clamp: 3; }
+  .battlewrap .hand:has(> .card:nth-child(2):last-child) .card { margin-left: max(-42px, min(4px, calc((100vw - 12px - 2 * var(--hc-w, 106px)) / 1))); }
+  .battlewrap .hand:has(> .card:nth-child(3):last-child) .card { margin-left: max(-42px, min(4px, calc((100vw - 12px - 3 * var(--hc-w, 106px)) / 2))); }
+  .battlewrap .hand:has(> .card:nth-child(4):last-child) .card { margin-left: max(-42px, min(4px, calc((100vw - 12px - 4 * var(--hc-w, 106px)) / 3))); }
+  .battlewrap .hand:has(> .card:nth-child(5):last-child) .card { margin-left: max(-42px, min(4px, calc((100vw - 12px - 5 * var(--hc-w, 106px)) / 4))); }
+  .battlewrap .hand:has(> .card:nth-child(6):last-child) .card { margin-left: max(-42px, min(4px, calc((100vw - 12px - 6 * var(--hc-w, 106px)) / 5))); }
+  .battlewrap .hand:has(> .card:nth-child(7):last-child) .card { margin-left: max(-42px, min(4px, calc((100vw - 12px - 7 * var(--hc-w, 106px)) / 6))); }
+  .battlewrap .hand:has(> .card:nth-child(8):last-child) .card { margin-left: max(-42px, min(4px, calc((100vw - 12px - 8 * var(--hc-w, 106px)) / 7))); }
+  .battlewrap .hand:has(> .card:nth-child(9):last-child) .card { margin-left: max(-42px, min(4px, calc((100vw - 12px - 9 * var(--hc-w, 106px)) / 8))); }
+  .battlewrap .hand:has(> .card:nth-child(10):last-child) .card { margin-left: max(-42px, min(4px, calc((100vw - 12px - 10 * var(--hc-w, 106px)) / 9))); }
+  .battlewrap .hand:has(> .card:nth-child(11):last-child) .card { margin-left: max(-42px, min(4px, calc((100vw - 12px - 11 * var(--hc-w, 106px)) / 10))); }
+  .battlewrap .hand:has(> .card:nth-child(12):last-child) .card { margin-left: max(-42px, min(4px, calc((100vw - 12px - 12 * var(--hc-w, 106px)) / 11))); }
+  .battlewrap .hand .card:first-child { margin-left: 0 !important; }
+}
+@media (max-height: 520px) { #app .battlewrap { --hc-w: 94px; } }
+@media (max-height: 520px) {
+  #app .battlewrap .pile-prop { bottom: -45px !important; transform: scale(.42) !important; }
+}
+/* 平板：牌堆贴边，手牌区让出两侧 */
+@media (min-width: 600px) and (max-width: 1199px) and (min-height: 521px) {
+  #app .battlewrap .pile-prop.draw-pile { left: 0 !important; right: auto !important; }
+  #app .battlewrap .pile-prop.discard-pile { right: 0 !important; left: auto !important; }
+  #app .battlewrap .hand-view { margin: 0 92px !important; }
+  .battlewrap .hand:has(> .card:nth-child(2):last-child) .card { margin-left: max(-48px, min(6px, calc((100vw - 184px - 2 * clamp(118px, 13vw, 140px)) / 1))); }
+  .battlewrap .hand:has(> .card:nth-child(3):last-child) .card { margin-left: max(-48px, min(6px, calc((100vw - 184px - 3 * clamp(118px, 13vw, 140px)) / 2))); }
+  .battlewrap .hand:has(> .card:nth-child(4):last-child) .card { margin-left: max(-48px, min(6px, calc((100vw - 184px - 4 * clamp(118px, 13vw, 140px)) / 3))); }
+  .battlewrap .hand:has(> .card:nth-child(5):last-child) .card { margin-left: max(-48px, min(6px, calc((100vw - 184px - 5 * clamp(118px, 13vw, 140px)) / 4))); }
+  .battlewrap .hand:has(> .card:nth-child(6):last-child) .card { margin-left: max(-48px, min(6px, calc((100vw - 184px - 6 * clamp(118px, 13vw, 140px)) / 5))); }
+  .battlewrap .hand:has(> .card:nth-child(7):last-child) .card { margin-left: max(-48px, min(6px, calc((100vw - 184px - 7 * clamp(118px, 13vw, 140px)) / 6))); }
+  .battlewrap .hand:has(> .card:nth-child(8):last-child) .card { margin-left: max(-48px, min(6px, calc((100vw - 184px - 8 * clamp(118px, 13vw, 140px)) / 7))); }
+  .battlewrap .hand:has(> .card:nth-child(9):last-child) .card { margin-left: max(-48px, min(6px, calc((100vw - 184px - 9 * clamp(118px, 13vw, 140px)) / 8))); }
+  .battlewrap .hand:has(> .card:nth-child(10):last-child) .card { margin-left: max(-48px, min(6px, calc((100vw - 184px - 10 * clamp(118px, 13vw, 140px)) / 9))); }
+  .battlewrap .hand:has(> .card:nth-child(11):last-child) .card { margin-left: max(-48px, min(6px, calc((100vw - 184px - 11 * clamp(118px, 13vw, 140px)) / 10))); }
+  .battlewrap .hand:has(> .card:nth-child(12):last-child) .card { margin-left: max(-48px, min(6px, calc((100vw - 184px - 12 * clamp(118px, 13vw, 140px)) / 11))); }
+  #app .battlewrap .hand-view { overflow-x: auto; overflow-y: visible; scrollbar-width: none; }
+  .battlewrap .hand .card:first-child { margin-left: 0 !important; }
+}
+
+/* 桌面面板放大只在足够高的屏上做（1280×720 时商店/选牌的底部操作条要留在首屏） */
+@media (min-width: 1200px) and (min-height: 800px) {
+  .panel, .dossier, .pz-panel, .pb-panel, .archive-inner, .overlay-inner { zoom: 1.08; }
+  .mappage .side { zoom: 1.08; }
+}
+@media (max-width: 599px), (max-height: 520px) {
+  #app .battlewrap .b-controls .undo { top: auto !important; bottom: 4px !important; left: 52px !important; z-index: 5; }
+  #app .battlewrap .b-controls .incoming { pointer-events: none; }
+}
+@media (min-width: 1200px) and (min-height: 521px) {
+  #app .battlewrap .pile-prop.draw-pile { left: 40px; }
+  #app .battlewrap .pile-prop.discard-pile { right: 40px; }
+}
+
+/* 新图：药剂实物照、烬匣证物袋 */
+.pslot .potion-photo, .shop-potion .sp-glyph .potion-photo { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: inherit; }
+.pslot:has(.potion-photo) { padding: 0; overflow: hidden; }
+.shop-potion .sp-glyph:has(.potion-photo) { padding: 0; overflow: hidden; background: none; }
+.shop-potion .sp-glyph:has(.potion-photo)::before, .shop-potion .sp-glyph:has(.potion-photo)::after,
+.pslot:has(.potion-photo)::before, .pslot:has(.potion-photo)::after { display: none; }
+.pile-art.ash-bag { position: relative; display: block; width: 72px; height: 72px; }
+.pile-art.ash-bag img { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; box-shadow: 0 6px 14px rgba(0,0,0,.55); filter: saturate(.85); }
+.shop-potion .sp-glyph:has(.potion-photo) { width: 40px; height: 40px; }
+
+/* ===== 费用重做 / 敌方新词条（feat/cost-enemies） ===== */
+.card .c-cost.is-tampered { background: #5a1f1f; color: #ffd9d0; box-shadow: 0 0 0 2px #c0533f inset; text-decoration: underline wavy #ff8d78 1px; }
+.card .c-cost.is-cheaper { color: #b9f3c9; }
+.intent + .i-kw, .i-kw + .i-kw { margin-left: 4px; }
+.i-kw { display: inline-block; vertical-align: middle; font-size: 11px; line-height: 1; padding: 3px 5px; border: 1px solid #8fa3b8; color: #dfe9f3; background: rgba(18, 26, 36, .82); letter-spacing: .08em; }
+.i-kw[data-kw="停摆"] { border-color: #e2b34a; color: #ffe2a0; animation: kwPulse 1.4s ease-in-out infinite; }
+.i-kw[data-kw="失控"] { border-color: #a37ad6; color: #e3cfff; }
+.i-kw[data-kw="偷牌"], .i-kw[data-kw="篡改"] { border-color: #d0705c; color: #ffd0c4; }
+.i-kw[data-kw="异变"], .i-kw[data-kw="加成"] { border-color: #6fb38f; color: #cfeedd; }
+@keyframes kwPulse { 50% { box-shadow: 0 0 0 3px rgba(226, 179, 74, .35); } }
+.e-stolen, .e-aura { font-size: 11px; line-height: 1.3; margin-top: 3px; padding: 2px 6px; color: #ffd0c4; background: rgba(60, 20, 18, .7); border-left: 2px solid #d0705c; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.e-aura { color: #cfeedd; background: rgba(16, 44, 32, .7); border-left-color: #6fb38f; }
+.move-caption { position: fixed; z-index: 60; pointer-events: none; opacity: 0; transition: opacity .25s ease; padding: 8px 12px; background: rgba(8, 11, 15, .9); border-top: 1px solid rgba(190, 205, 220, .35); border-bottom: 1px solid rgba(190, 205, 220, .35); color: #d7dee6; font-size: 13px; line-height: 1.55; text-align: left; box-shadow: 0 8px 24px rgba(0, 0, 0, .45); }
+.move-caption b { display: block; font-size: 11px; letter-spacing: .12em; color: #8fa3b8; font-weight: 600; margin-bottom: 2px; }
+.move-caption.on { opacity: 1; }
+@media (max-width: 480px) { .move-caption { font-size: 12px; padding: 6px 9px; } }
+
+/* 手机竖屏：药剂槽是 44px 触控目标，和生命/污染/金币挤在同一行会换行并溢出
+   固定 46px 的顶栏，把第一行顶到视口外（390×844 上实测血量/金币被盖住）。
+   这里让 HUD 明确换行、顶栏随内容增高，并用 --tb-h 同步面板页/折叠菜单的定位。 */
+@media (max-width: 599px) {
+  .topbar { height: auto; min-height: var(--tb-h); }
+  .hud { flex-wrap: wrap; overflow: visible; row-gap: 4px; align-content: center; }
+  .huditem { flex: 0 0 auto; }
+  .meter { width: clamp(60px, 18vw, 78px); }
+  .potionslots { flex: 0 0 auto; margin-left: 0; }
+  body:has(.potionslots) { --tb-h: 65px; }
+}

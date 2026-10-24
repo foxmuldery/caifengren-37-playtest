@@ -1,0 +1,26 @@
+{
+  "v": 1,
+  "alg": "AES-256-GCM",
+  "kdf": "PBKDF2-SHA256",
+  "iter": 250000,
+  "salt": "NzJj3whSbgRyDZBiym4HYQ==",
+  "iv": "ysUEAKy1X/1jRoe4",
+  "bytes": 742430,
+  "plainBytes": 742414,
+  "files": [
+    "js/diag.js",
+    "js/recorder.js",
+    "js/data.cards.js",
+    "js/data.world.js",
+    "js/data.lore.js",
+    "js/data.art.js",
+    "js/data.entity.js",
+    "js/data.intro.js",
+    "js/data.puzzles.js",
+    "js/engine.js",
+    "js/ui.puzzle.js",
+    "js/ui.js",
+    "js/fx.js"
+  ],
+  "sealedAt": "2026-10-24T04:19:10.077Z"
+}

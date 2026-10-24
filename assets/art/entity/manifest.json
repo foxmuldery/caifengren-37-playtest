@@ -1,0 +1,241 @@
+{
+ "chuandan": {
+  "still": [
+   318,
+   360
+  ],
+  "w": 281,
+  "h": 300,
+  "clips": {
+   "attack": 16,
+   "hit": 16,
+   "ko": 16
+  },
+  "rest": true
+ },
+ "qiaomen": {
+  "still": [
+   166,
+   360
+  ],
+  "w": 201,
+  "h": 300,
+  "clips": {
+   "attack": 16
+  },
+  "rest": true
+ },
+ "shijie": {
+  "still": [
+   134,
+   360
+  ]
+ },
+ "yingchong": {
+  "still": [
+   166,
+   360
+  ],
+  "w": 153,
+  "h": 300,
+  "clips": {
+   "attack": 16
+  },
+  "rest": true
+ },
+ "yezhu": {
+  "still": [
+   270,
+   360
+  ]
+ },
+ "huojie": {
+  "still": [
+   205,
+   360
+  ]
+ },
+ "sheying": {
+  "still": [
+   195,
+   360
+  ],
+  "w": 256,
+  "h": 300,
+  "clips": {
+   "attack": 16,
+   "hit": 16,
+   "ko": 16
+  },
+  "rest": true
+ },
+ "diaosiren": {
+  "still": [
+   273,
+   360
+  ],
+  "w": 212,
+  "h": 300,
+  "clips": {
+   "attack": 16,
+   "hit": 16,
+   "ko": 16
+  },
+  "rest": true
+ },
+ "fugu": {
+  "still": [
+   287,
+   360
+  ],
+  "w": 293,
+  "h": 300,
+  "clips": {
+   "attack": 16,
+   "hit": 16,
+   "ko": 16
+  },
+  "rest": true
+ },
+ "xingren": {
+  "still": [
+   89,
+   360
+  ],
+  "w": 99,
+  "h": 300,
+  "clips": {
+   "attack": 16,
+   "hit": 16,
+   "idle": 16,
+   "ko": 16
+  },
+  "rest": false
+ },
+ "zhuiguang": {
+  "still": [
+   335,
+   360
+  ]
+ },
+ "shizhiyu": {
+  "still": [
+   512,
+   360
+  ]
+ },
+ "youou": {
+  "still": [
+   174,
+   360
+  ]
+ },
+ "zhouyu": {
+  "still": [
+   189,
+   360
+  ]
+ },
+ "cuosheng": {
+  "still": [
+   742,
+   360
+  ]
+ },
+ "xada": {
+  "still": [
+   399,
+   360
+  ],
+  "w": 236,
+  "h": 300,
+  "clips": {
+   "attack": 16,
+   "hit": 16,
+   "ko": 16
+  },
+  "rest": true
+ },
+ "xianwei": {
+  "still": [
+   109,
+   360
+  ],
+  "w": 145,
+  "h": 300,
+  "clips": {
+   "attack": 16,
+   "hit": 16,
+   "idle": 16,
+   "ko": 16
+  },
+  "rest": false
+ },
+ "banjiti": {
+  "still": [
+   231,
+   360
+  ]
+ },
+ "rengong": {
+  "still": [
+   229,
+   360
+  ]
+ },
+ "dxi": {
+  "still": [
+   159,
+   360
+  ]
+ },
+ "jisheng": {
+  "still": [
+   408,
+   360
+  ]
+ },
+ "wuxing": {
+  "still": [
+   285,
+   360
+  ],
+  "w": 257,
+  "h": 300,
+  "clips": {
+   "attack": 16,
+   "hit": 16,
+   "ko": 16
+  },
+  "rest": true
+ },
+ "dasheng": {
+  "still": [
+   145,
+   360
+  ],
+  "w": 205,
+  "h": 300,
+  "clips": {
+   "attack": 16,
+   "hit": 16,
+   "ko": 16
+  },
+  "rest": true
+ },
+ "zongjingli": {
+  "still": [
+   380,
+   360
+  ],
+  "w": 322,
+  "h": 300,
+  "clips": {
+   "attack": 16,
+   "hit": 16,
+   "idle": 16,
+   "ko": 16
+  },
+  "rest": false
+ }
+}
