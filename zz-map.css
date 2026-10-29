@@ -1,0 +1,62 @@
+/* M3 城市地图（旧规划图 + 监控照片拼贴），2026-10-23 */
+/* 底图画在 .map-inner::before 上，跟着可滚动的节点区一起走；上下各让出约 12% 的照片条，节点不压照片 */
+.mapwrap.citymap.has-map{container-type:inline-size}
+.mapwrap.citymap.has-map .map-inner{margin:20cqw 0 34cqw}
+.mapwrap.citymap.has-map .map-inner::before{content:"";position:absolute;left:0;right:0;top:-20cqw;bottom:-34cqw;z-index:-1;pointer-events:none;background:var(--map-p) center/100% 100% no-repeat}
+.mapwrap.citymap.has-map .map-inner{z-index:0;isolation:isolate}
+.mapwrap.citymap::after{background:radial-gradient(80% 75% at 50% 50%,transparent 60%,rgba(5,8,10,.55))!important}
+.citymap{background:#0c1114!important}
+.citysvg .blocks,.citysvg .streets,.city-label{display:none}
+.citysvg .route{stroke:rgba(40,52,60,.8);stroke-width:.45;stroke-dasharray:1.2 1}
+/* 走过的路径压成灰线，和可走的红框区分开 */
+.citysvg .route.done{stroke:rgba(138,142,145,.42);stroke-width:.55;stroke-dasharray:none}
+.citysvg .route.live{stroke:#c8322a;stroke-width:.9}
+/* 节点只放在中间的空白规划图区域，不挡边缘的照片 */
+.node{width:44px;height:44px;border:0!important;background:none!important;border-radius:0!important;box-shadow:0 3px 6px rgba(0,0,0,.6)!important;padding:0}
+.node.boss{width:48px;height:48px}
+.node .n-ico,.node .n-ico img{width:100%;height:100%;display:block}
+.node.avail{animation:none;outline:2px solid #e0443a;outline-offset:2px;z-index:6}
+/* 可走节点：实心红框 + 呼吸高亮；reduce-motion 时保持静态 */
+.node.avail::after{
+  content:"";position:absolute;inset:-4px;z-index:8;pointer-events:none;
+  border:3px solid #e0443a;box-shadow:0 0 0 1px rgba(224,68,58,.5),0 0 14px rgba(224,68,58,.45);
+  animation:nodeBreathe 1.6s ease-in-out infinite;
+}
+@keyframes nodeBreathe{
+  0%,100%{opacity:.55;transform:scale(.96)}
+  50%{opacity:1;transform:scale(1.05)}
+}
+.node.cur{outline:3px solid #fff;outline-offset:1px;z-index:7}
+.node.visited{opacity:.42;filter:grayscale(1)}
+@media (prefers-reduced-motion: reduce){
+  .node.avail::after{animation:none!important;opacity:1;transform:none}
+}
+.lg{border:0;width:22px;height:22px}.lg img{width:22px;height:22px;display:block}
+/* 地图可纵向滚动时的轻提示：贴在视口下沿，玩家一滚就淡出（top 由 ui.js 按地图栏高度算） */
+.map-scroll-hint{position:sticky;top:0;z-index:12;width:max-content;margin:0 auto -26px;padding:5px 10px;
+  border:1px solid rgba(232,224,205,.28);background:rgba(8,10,10,.78);color:#cfc7b4;
+  font-family:var(--mono);font-size:10px;letter-spacing:.14em;pointer-events:none;
+  opacity:0;transform:translateY(4px);transition:opacity .35s,transform .35s}
+.map-scroll-hint.on{opacity:.9;transform:none}
+.map-scroll-hint.off{opacity:0}
+.map-scroll-hint[hidden]{display:none}
+/* 宽屏一屏放得下：不再给照片条留上下边距，节点区不会把内容顶出地图栏；
+   第一场战斗的提示条仍在流内，给它让出高度，免得盖住最上面一行（BOSS）。 */
+@media (min-width:1280px){
+  .mapwrap.citymap.has-map .map-inner{margin:0}
+  .mapwrap.citymap.has-map .map-inner::before{top:0;bottom:0}
+  .mapwrap.citymap.has-map:has(.map-coach) .map-inner{height:calc(100% - 72px);min-height:calc(100% - 72px)}
+}
+@media (max-width:600px){.node{width:36px;height:36px}.node.boss{width:46px;height:46px}}
+@media (max-width:380px){.node{width:32px;height:32px}.node.boss{width:40px;height:40px}}
+/* 矮横屏（如 844×390）：地图栏是横的，用横版底图（照片在左右边），节点区让出左右边，节点缩小以免相互压住 */
+@media (max-height:520px) and (orientation:landscape){
+  .mapwrap.citymap.has-map .map-inner{margin:0 12cqw}
+  .mapwrap.citymap.has-map .map-inner::before{top:0;bottom:0;left:-12cqw;right:-12cqw;background-image:var(--map-l)}
+  .node{width:28px;height:28px}.node.boss{width:36px;height:36px}
+}
+/* 手机竖屏：顶部照片条在窄屏上占比更大，第一排（BOSS）往下挪开，避免压住照片 */
+@media (max-width:600px) and (orientation:portrait){
+  .mapwrap.citymap.has-map .map-inner{margin-top:30cqw}
+  .mapwrap.citymap.has-map .map-inner::before{top:-30cqw}
+}

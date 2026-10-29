@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>采风人 · 37号仓库</title>
+<meta name="description" content="采风人 · 37号仓库：一款档案怪核风格的卡牌肉鸽。">
+<meta name="theme-color" content="#0d0f0e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="采风人">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="puzzle.css">
+<link rel="stylesheet" href="zz-map.css">
+<link rel="stylesheet" href="zz-layout.css">
+<link rel="stylesheet" href="fx-battle.css">
+<link rel="stylesheet" href="assets/fx/urban-fx.css">
+<link rel="stylesheet" href="assets/fx/idle-scheme.css"></head>
+<body>
+<canvas id="noise" width="512" height="512" aria-hidden="true"></canvas>
+<div id="scanlines"></div>
+<div id="app" role="main"></div>
+<div id="fx"></div>
+<div id="tooltip" class="hidden"></div>
+<div id="rotate-hint" role="alertdialog" aria-modal="true" aria-labelledby="rotate-title" aria-describedby="rotate-desc" aria-hidden="true" hidden>
+  <div class="rh-inner">
+    <div class="rh-icon" aria-hidden="true"><span class="rh-phone"></span><span class="rh-arrow">↻</span></div>
+    <h1 id="rotate-title">请横过手机</h1>
+    <p id="rotate-desc">《采风人》在手机上只支持横屏。横过来后会从刚才的位置继续。</p>
+    <button type="button" class="btn" data-act="rotatefs">全屏并横屏</button>
+  </div>
+</div>
+<div id="small-screen" role="status">
+  <div class="ss-inner">
+    <div class="ss-tag">窗口尺寸不足</div>
+    <h1>窗口太小，暂时无法采风</h1>
+    <p class="ss-desk">窗口需要 <b>≥ 340px 宽、≥ 300px 高</b>。桌面推荐 <b>1280 × 800</b> 以上。</p>
+    <p class="ss-desk">手机请<b>横屏</b>；桌面端请拉宽/拉高浏览器窗口。</p>
+    <p class="ss-phone">手机横屏可视区需要大约 <b>≥ 480 × 200</b>（短暂缩小工具栏不会误拦）。请退出分屏，或把手机横过来再试。</p>
+    <p class="ss-hint">当前游戏的存档不会因此丢失。</p>
+  </div>
+</div>
+
+<script src="build-info.js"></script>
+<!-- 战斗特效包按需加载（默认开启；软件渲染 / ?fx=0 / 设置关闭时不加载）：见 js/ui.js ensureBattleFx() -->
+
+<script src="js/gate.js"></script>
+</body>
+</html>

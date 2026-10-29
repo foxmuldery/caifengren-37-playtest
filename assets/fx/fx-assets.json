@@ -1,0 +1,102 @@
+{
+ "fx_cast": {
+  "frames": 14,
+  "w": 256,
+  "h": 256,
+  "fps": 15,
+  "loop": false
+ },
+ "fx_snow": {
+  "frames": 8,
+  "w": 192,
+  "h": 192,
+  "fps": 8,
+  "loop": true
+ },
+ "fx_seal_in": {
+  "frames": 10,
+  "w": 320,
+  "h": 240,
+  "fps": 15,
+  "loop": false
+ },
+ "fx_seal_loop": {
+  "frames": 8,
+  "w": 320,
+  "h": 240,
+  "fps": 6,
+  "loop": true
+ },
+ "fx_ink": {
+  "frames": 12,
+  "w": 192,
+  "h": 192,
+  "fps": 18,
+  "loop": false
+ },
+ "fx_burn": {
+  "frames": 12,
+  "w": 200,
+  "h": 260,
+  "fps": 16,
+  "loop": false
+ },
+ "fx_stamp_archived": {
+  "frames": 1,
+  "w": 252,
+  "h": 140
+ },
+ "fx_stamp_sealed": {
+  "frames": 1,
+  "w": 252,
+  "h": 136
+ },
+ "fx_watch": {
+  "frames": 1,
+  "w": 120,
+  "h": 150
+ },
+ "fx_watch_tick": {
+  "frames": 8,
+  "w": 120,
+  "h": 150,
+  "fps": 8,
+  "loop": true
+ },
+ "fx_ticket": {
+  "frames": 1,
+  "w": 206,
+  "h": 106
+ },
+ "fx_ticket_punched": {
+  "frames": 1,
+  "w": 206,
+  "h": 106
+ },
+ "fx_scratch": {
+  "frames": 4,
+  "w": 256,
+  "h": 256,
+  "fps": 12,
+  "loop": true
+ },
+ "fx_yellow_strip": {
+  "frames": 1,
+  "w": 72,
+  "h": 220
+ },
+ "fx_yellow_tear": {
+  "frames": 10,
+  "w": 140,
+  "h": 300,
+  "fps": 16,
+  "loop": false
+ },
+ "fx_yellow_burn": {
+  "frames": 10,
+  "w": 72,
+  "h": 220,
+  "fps": 14,
+  "loop": false
+ }
+}

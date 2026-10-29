@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>内测记录器 · 采风人 37号仓库</title>
+<meta name="theme-color" content="#0d0f0e">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<style>
+  :root {
+    --bg: #0d0f0e; --panel: #141716; --panel2: #191d1b; --line: rgba(232,224,205,.14);
+    --text: #e8e0cd; --dim: #8c8677; --amber: #c9a227; --red: #a63030; --red2: #d0604e;
+    --serif: "Songti SC", "Noto Serif SC", "Source Han Serif SC", serif;
+    --mono: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    background:
+      radial-gradient(1200px 700px at 70% -10%, rgba(201,162,39,.06), transparent 60%),
+      radial-gradient(900px 600px at 0% 100%, rgba(120,30,24,.10), transparent 60%),
+      var(--bg);
+    color: var(--text); font-family: var(--serif); font-size: 14px; line-height: 1.7;
+    -webkit-text-size-adjust: 100%;
+  }
+  body::after {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 9;
+    background: repeating-linear-gradient(0deg, rgba(255,255,255,.02) 0 1px, transparent 1px 3px);
+    opacity: .5;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 28px 20px 64px; }
+  header { display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+  .mark {
+    width: 34px; height: 34px; flex: 0 0 auto; display: grid; place-items: center;
+    border: 1px solid var(--amber); color: var(--amber); font-family: var(--mono); font-size: 13px;
+    letter-spacing: .06em;
+  }
+  h1 { font-size: 21px; letter-spacing: .12em; margin: 0; font-weight: 600; }
+  .sub { font-family: var(--mono); font-size: 10px; letter-spacing: .22em; color: var(--dim); margin-top: 4px; }
+  .grow { flex: 1 1 200px; }
+  a.btn, button.btn { font-family: var(--mono); }
+  .btn, .ghost {
+    display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+    border: 1px solid var(--line); background: rgba(0,0,0,.3); color: var(--text);
+    padding: 7px 12px; font-size: 12px; letter-spacing: .04em; text-decoration: none;
+    transition: border-color .16s, background .16s, color .16s;
+  }
+  .btn:hover, .ghost:hover { border-color: rgba(201,162,39,.6); color: #fff; }
+  .btn.primary { border-color: rgba(201,162,39,.7); background: rgba(201,162,39,.12); color: #f3e6bd; }
+  .btn.danger:hover { border-color: rgba(166,48,48,.7); color: #eab8ae; }
+  .card {
+    border: 1px solid var(--line); background: linear-gradient(170deg, rgba(27,30,29,.9), rgba(13,15,14,.94));
+    padding: 18px 20px; margin-bottom: 16px;
+  }
+  .card h2 {
+    font-size: 13px; letter-spacing: .2em; margin: 0 0 12px; color: var(--amber);
+    font-family: var(--mono); font-weight: 400;
+  }
+  label.f { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: .18em; color: var(--dim); margin: 10px 0 5px; }
+  input[type=text], textarea {
+    width: 100%; background: rgba(0,0,0,.42); color: var(--text);
+    border: 1px solid var(--line); padding: 9px 11px; font-family: var(--serif); font-size: 13px;
+    line-height: 1.7; resize: vertical;
+  }
+  input[type=text]:focus, textarea:focus { outline: none; border-color: rgba(201,162,39,.6); }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip {
+    cursor: pointer; border: 1px solid var(--line); background: rgba(0,0,0,.25);
+    color: #b6ad9c; padding: 5px 10px; font-size: 12px; font-family: var(--mono);
+    transition: .16s;
+  }
+  .chip:hover { border-color: rgba(201,162,39,.45); color: #f0e7d4; }
+  .chip.on { border-color: var(--amber); background: rgba(201,162,39,.14); color: #f6e9c2; }
+  .chip[data-sev=bug].on, .chip[data-sev=block].on { border-color: var(--red2); background: rgba(166,48,48,.16); color: #f0c3b8; }
+  .hint { font-family: var(--mono); font-size: 10px; color: var(--dim); letter-spacing: .06em; }
+  .hint b { color: #cfc4ab; font-weight: 600; }
+  .meta { display: flex; gap: 14px; flex-wrap: wrap; font-family: var(--mono); font-size: 10px; color: var(--dim); letter-spacing: .08em; }
+  .meta b { color: var(--text); font-weight: 600; }
+  ul.list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 9px; }
+  .item { border-left: 2px solid var(--line); padding: 8px 0 8px 12px; }
+  .item.sev-bug, .item.sev-block { border-left-color: rgba(166,48,48,.7); }
+  .item.sev-balance { border-left-color: rgba(201,162,39,.6); }
+  .item.sev-ux, .item.sev-text { border-left-color: rgba(110,140,130,.6); }
+  .item-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .tag { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; padding: 1px 6px; border: 1px solid var(--line); color: #cfc4ab; }
+  .tag.bug, .tag.block { border-color: rgba(166,48,48,.6); color: #e6a79a; }
+  .tag.balance { border-color: rgba(201,162,39,.5); color: #e6cf8c; }
+  .when { font-family: var(--mono); font-size: 10px; color: var(--dim); }
+  .text { margin: 5px 0 0; white-space: pre-wrap; word-break: break-word; }
+  .ctx { font-family: var(--mono); font-size: 10px; color: #7f7a6c; margin-top: 5px; word-break: break-word; }
+  .del { margin-left: auto; }
+  .empty { color: var(--dim); font-size: 13px; }
+  .toast {
+    position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%);
+    background: rgba(12,14,13,.96); border: 1px solid rgba(201,162,39,.5); color: #f3e6bd;
+    padding: 9px 16px; font-family: var(--mono); font-size: 11px; letter-spacing: .06em;
+    opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 20; max-width: 92vw;
+  }
+  .toast.on { opacity: 1; transform: translateX(-50%) translateY(-4px); }
+  .toast.bad { border-color: rgba(166,48,48,.6); color: #f0c3b8; }
+  details.import summary { cursor: pointer; color: var(--dim); font-family: var(--mono); font-size: 11px; }
+  details.import[open] summary { color: var(--amber); margin-bottom: 10px; }
+  footer { margin-top: 26px; font-family: var(--mono); font-size: 10px; color: var(--dim); line-height: 2; }
+  footer a { color: #b6ad9c; }
+  @media (max-width: 620px) {
+    .wrap { padding: 18px 12px 52px; }
+    h1 { font-size: 17px; }
+    .card { padding: 14px; }
+    .btn, .ghost { padding: 7px 10px; font-size: 11.5px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="mark">记</div>
+    <div>
+      <h1>内测记录器</h1>
+      <div class="sub">采风人 · 37 号仓库 · 内测记录</div>
+    </div>
+    <div class="grow"></div>
+    <a class="btn" href="index.html">打开游戏</a>
+  </header>
+
+  <div class="card">
+    <h2>本次试玩 · 这次是谁在试玩</h2>
+    <div class="row">
+      <div style="flex:1 1 200px">
+        <label class="f" for="who">试玩人</label>
+        <input id="who" type="text" maxlength="40" placeholder="名字 / 代号" autocomplete="nickname">
+      </div>
+      <div style="flex:2 1 260px">
+        <label class="f" for="focus">本次重点（可选）</label>
+        <input id="focus" type="text" maxlength="400" placeholder="例如：新手前 10 分钟；第三幕幕终节奏">
+      </div>
+    </div>
+    <div class="meta" style="margin-top:12px">
+      <span>版本 <b id="m-ver">—</b></span>
+      <span>构建 <b id="m-build">—</b></span>
+      <span>设备 <b id="m-dev">—</b></span>
+      <span>已记录 <b id="m-n">0</b> 条 · 带局势 <b id="m-ctx">0</b></span>
+    </div>
+    <p class="hint" style="margin:10px 0 0">数据只存在这个浏览器（localStorage），不联网。换设备/换浏览器前请先导出。</p>
+  </div>
+
+  <div class="card">
+    <h2>记一条</h2>
+    <label class="f">类型</label>
+    <div class="chips" id="sevs"></div>
+    <label class="f">发生在哪</label>
+    <div class="chips" id="areas"></div>
+    <label class="f" for="text">问题 / 想法</label>
+    <textarea id="text" rows="4" maxlength="1200" placeholder="写清楚「我做了什么 → 我期待什么 → 实际发生了什么」。游戏里按 N 打开内置记录器，会自动带上当时的局势。"></textarea>
+    <div class="row" style="margin-top:10px">
+      <button class="btn primary" id="add">记下这条</button>
+      <span class="hint">⌘/Ctrl + Enter</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>记录</h2>
+    <div class="row" style="margin-bottom:12px">
+      <button class="ghost" id="copy">复制文字版</button>
+      <button class="ghost" id="copybrief">复制给 AI 的提示词</button>
+      <button class="ghost" id="md">下载文字版（.md）</button>
+      <button class="ghost" id="json">下载 .json</button>
+      <button class="ghost danger" id="clear">清空</button>
+    </div>
+    <ul class="list" id="list"></ul>
+    <p class="empty" id="empty">还没有记录。</p>
+  </div>
+
+  <div class="card">
+    <details class="import">
+      <summary>导入 · 合并别处导出的 JSON（游戏内置记录器 / 另一台设备）</summary>
+      <div class="row" style="margin-bottom:10px">
+        <input type="file" id="file" accept=".json,application/json" class="hint">
+      </div>
+      <textarea id="paste" rows="5" placeholder="也可以直接粘贴 JSON 文本，然后点「合并导入」。相同 id 的条目会自动跳过。"></textarea>
+      <div class="row" style="margin-top:10px">
+        <button class="btn" id="merge">合并导入</button>
+        <span class="hint">导入不会覆盖本机已有记录。</span>
+      </div>
+    </details>
+  </div>
+
+  <footer>
+    采风人 · 37号仓库 —— 内测记录器 · 与游戏内「记」共用同一份本机数据（同一域名下）。<br>
+    反馈时把文字版直接粘给对接人，或把 .json 发过去；两者都带版本号与设备信息。
+  </footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="build-info.js"></script>
+<script src="js/recorder.js"></script>
+<script>
+(function () {
+  'use strict';
+  const $ = s => document.querySelector(s);
+  const SEVS = REC.sevs(), AREAS = REC.areas();
+  let sev = 'bug', area = '其他';
+  let clearAsk = false;
+
+  function toast(msg, bad) {
+    const el = $('#toast');
+    el.textContent = msg;
+    el.classList.toggle('bad', !!bad);
+    el.classList.add('on');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => el.classList.remove('on'), 2600);
+  }
+
+  function fmt(t) {
+    const d = new Date(t || Date.now()), p = n => (n < 10 ? '0' : '') + n;
+    return p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+  }
+
+  function chips(el, list, cur, onPick, key) {
+    el.innerHTML = list.map(x => {
+      const id = typeof x === 'string' ? x : x.id;
+      const label = typeof x === 'string' ? x : x.label;
+      const tip = typeof x === 'string' ? '' : (x.hint || '');
+      return `<button type="button" class="chip${cur === id ? ' on' : ''}" data-${key}="${id}" title="${tip.replace(/"/g, '&quot;')}">${label}</button>`;
+    }).join('');
+    el.querySelectorAll('button').forEach(b => {
+      b.addEventListener('click', () => onPick(b.dataset[key]));
+    });
+  }
+
+  function paintMeta() {
+    const s = REC.session(), st = REC.stats(), b = s.build, d = s.device;
+    $('#m-ver').textContent = 'v' + (b.version || '?');
+    $('#m-build').textContent = b.commit || '本地';
+    $('#m-dev').textContent = [d.os, d.browser, d.viewport].filter(Boolean).join(' · ');
+    $('#m-n').textContent = st.total;
+    $('#m-ctx').textContent = st.withCtx;
+    $('#who').value = s.who || '';
+    $('#focus').value = s.note || '';
+  }
+
+  function paintList() {
+    const list = REC.entries().slice().reverse();
+    const box = $('#list');
+    box.innerHTML = list.map(e => {
+      const label = (SEVS.find(s => s.id === e.sev) || {}).label || e.sev;
+      const c = e.ctx || {};
+      const where = [c.place || c.nodeType || '', c.char || '', c.act ? '第' + c.act + '幕 · ' + (c.floor || '?') + '层' : '', c.seed ? '种子 ' + c.seed : ''].filter(Boolean).join(' · ');
+      const hp = c.maxHp ? '生命 ' + c.hp + '/' + c.maxHp + ' · 污染 ' + c.pollution : '';
+      return `<li class="item sev-${e.sev}">
+        <div class="item-head">
+          <span class="tag ${e.sev}">${label}</span>
+          <span class="tag">${e.area}</span>
+          <span class="when">${fmt(e.t)}${e.who ? ' · ' + e.who : ''}</span>
+          <button class="ghost del" data-del="${e.id}" aria-label="删除这条">×</button>
+        </div>
+        <div class="text">${e.text.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]))}</div>
+        ${(where || hp) ? `<div class="ctx">${(where + (where && hp ? ' · ' : '') + hp).replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]))}</div>` : ''}
+      </li>`;
+    }).join('');
+    $('#empty').style.display = list.length ? 'none' : '';
+    box.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', () => {
+      REC.remove(b.dataset.del);
+      paintMeta(); paintList(); toast('已删除');
+    }));
+    paintMeta();
+  }
+
+  function bindChips() {
+    chips($('#sevs'), SEVS, sev, v => { sev = v; bindChips(); }, 'sev');
+    chips($('#areas'), AREAS, area, v => { area = v; bindChips(); }, 'area');
+  }
+  bindChips();
+
+  function addEntry() {
+    const text = $('#text').value;
+    const who = $('#who').value;
+    if (!String(text).trim()) { toast('先写一句再记', true); $('#text').focus(); return; }
+    REC.setSession({ who });
+    const r = REC.add({ text, sev, area, who });
+    if (!r.ok) { toast('没有记下来：' + r.err, true); return; }
+    $('#text').value = '';
+    paintList();
+    toast('已记下（共 ' + r.total + ' 条）');
+  }
+
+  $('#add').addEventListener('click', addEntry);
+  $('#text').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); addEntry(); }
+  });
+  $('#who').addEventListener('input', () => REC.setSession({ who: $('#who').value }));
+  $('#focus').addEventListener('input', () => REC.setSession({ note: $('#focus').value }));
+
+  $('#copy').addEventListener('click', () => {
+    if (!REC.stats().total) return toast('还没有记录', true);
+    REC.copy(REC.markdown()).then(ok => toast(ok ? '文字版已复制' : '复制失败：请用「下载文字版（.md）」', !ok));
+  });
+  $('#copybrief').addEventListener('click', () => {
+    if (!REC.stats().total) return toast('还没有记录', true);
+    REC.copy(REC.brief()).then(ok => toast(ok ? '提示词已复制（可直接粘给 AI）' : '复制失败：请用「下载文字版（.md）」', !ok));
+  });
+  $('#md').addEventListener('click', () => {
+    if (!REC.stats().total) return toast('还没有记录', true);
+    const ok = REC.download('cf37-内测记录-' + REC.stamp() + '.md', REC.markdown(), 'text/markdown;charset=utf-8');
+    toast(ok ? '文字版已下载' : '下载失败', !ok);
+  });
+  $('#json').addEventListener('click', () => {
+    if (!REC.stats().total) return toast('还没有记录', true);
+    const ok = REC.download('cf37-内测记录-' + REC.stamp() + '.json', REC.jsonText(), 'application/json');
+    toast(ok ? '已下载 JSON' : '下载失败', !ok);
+  });
+  $('#clear').addEventListener('click', () => {
+    const n = REC.stats().total;
+    if (!n) return toast('本来就没有记录');
+    if (!clearAsk) {
+      clearAsk = true;
+      $('#clear').textContent = '再点一次确认';
+      toast('会删掉 ' + n + ' 条，建议先下载文字版');
+      setTimeout(() => { clearAsk = false; $('#clear').textContent = '清空'; }, 4000);
+      return;
+    }
+    REC.clear();
+    clearAsk = false;
+    $('#clear').textContent = '清空';
+    paintList();
+    toast('已清空');
+  });
+
+  function mergeText(text) {
+    if (!String(text).trim()) return toast('没有可导入的内容', true);
+    const r = REC.importText(text);
+    if (!r.ok) return toast(r.err === 'json' ? 'JSON 解析失败' : '格式不对：需要 { entries: [...] }', true);
+    paintList();
+    toast('合并完成：新增 ' + r.added + ' 条，跳过 ' + r.skipped + ' 条');
+  }
+  $('#merge').addEventListener('click', () => mergeText($('#paste').value));
+  $('#file').addEventListener('change', e => {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    const rd = new FileReader();
+    rd.onload = () => mergeText(String(rd.result || ''));
+    rd.onerror = () => toast('读文件失败', true);
+    rd.readAsText(f);
+  });
+
+  paintList();
+})();
+</script>
+</body>
+</html>
